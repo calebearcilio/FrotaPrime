@@ -1,0 +1,42 @@
+{
+  "name": "frota-prime-api",
+  "version": "1.0.0",
+  "description": "Servidor da API",
+  "keywords": [
+    "API"
+  ],
+  "homepage": "https://github.com/calebearcilio/FrotaPrime#readme",
+  "bugs": {
+    "url": "https://github.com/calebearcilio/FrotaPrime/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calebearcilio/FrotaPrime.git"
+  },
+  "license": "ISC",
+  "author": "calebearcilio, luispaivaa, matheushromao",
+  "type": "module",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "setup": "npm install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "prisma skills sync || exit 0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.10.1",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "prisma": "^7.10.1",
+    "zod": "^4.6.7",
+    "cors": "2.8.6"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}
