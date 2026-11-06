@@ -1,0 +1,64 @@
+name: frotaprime
+
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: frotaprime
+      MYSQL_DATABASE: frotaprime
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      # Via TCP: durante a inicialização a imagem sobe um servidor temporário só com socket
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  api:
+    build: ./api
+    environment:
+      # Root porque "prisma migrate dev" precisa criar um shadow database. Senha só de desenvolvimento.
+      DATABASE_URL: mysql://root:frotaprime@db:3306/frotaprime
+    ports:
+      - "${API_PORT:-3000}:3000"
+    volumes:
+      # Migrations criadas no container precisam aparecer no host para entrar no git
+      - ./api/prisma:/app/prisma
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./api/src
+          target: /app/src
+        - action: rebuild
+          path: ./api/package.json
+        - action: rebuild
+          path: ./api/package-lock.json
+
+  frontend:
+    build: ./frontend
+    environment:
+      # Quem chama a API é o navegador, no host, por isso localhost e não "api"
+      VITE_API_URL: http://localhost:${API_PORT:-3000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+        - action: rebuild
+          path: ./frontend/package.json
+        - action: rebuild
+          path: ./frontend/package-lock.json
+
+volumes:
+  db_data:

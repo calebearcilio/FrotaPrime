@@ -26,5 +26,9 @@
     "dev:api": "npm run dev --prefix api",
     "setup": "npm run setup --prefix api",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.21.0",
+    "react-hook-form": "^7.91.0"
   }
 }
