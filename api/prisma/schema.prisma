@@ -4,43 +4,49 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
-enum StatusLocacao {
-  ATIVA
-  FINALIZADA
+enum RentalStatus {
+  ACTIVE
+  COMPLETED
 }
 
-model Usuario {
-  id          Int     @id @default(autoincrement())
-  nome        String
-  email       String  @unique
-  senha       String
-  criadoEm    DateTime @default(now())
-  locacoes    Locacao[]
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+  rentals    Rental[]
+
+  @@map("users")
 }
 
-model Veiculo {
-  id              Int             @id @default(autoincrement())
-  marca           String
-  modelo          String
-  placa           String          @unique
-  ano Int
-  valorDiaria     Decimal         @db.Decimal(10, 2)
-  disponivel      Boolean         @default(true)
-  locacoes        Locacao[]
+model Vehicle {
+  id             Int      @id @default(autoincrement())
+  brand          String
+  model          String
+  licensePlate   String   @unique
+  year           Int
+  dailyRate      Decimal  @db.Decimal(10, 2)
+  available      Boolean  @default(true)
+  rentals        Rental[]
+
+  @@map("vehicles")
 }
 
-model Locacao {
-  id                     Int           @id @default(autoincrement())
-  usuarioId              Int
-  veiculoId              Int
-  dataInicio             DateTime
-  dataPrevistaDevolucao  DateTime
-  dataDevolucao          DateTime?
-  valorTotal             Decimal        @db.Decimal(10, 2)
-  status                 StatusLocacao  @default(ATIVA)
-  usuario                Usuario        @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  veiculo                Veiculo        @relation(fields: [veiculoId], references: [id], onDelete: Restrict)
+model Rental {
+  id                    Int          @id @default(autoincrement())
+  userId                Int
+  vehicleId             Int
+  startDate             DateTime
+  expectedReturnDate    DateTime
+  returnDate            DateTime?
+  totalAmount           Decimal      @db.Decimal(10, 2)
+  status                RentalStatus @default(ACTIVE)
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Restrict)
+  vehicle               Vehicle      @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+
+  @@map("rentals")
 }
