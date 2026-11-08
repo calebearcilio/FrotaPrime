@@ -4,8 +4,5 @@ export abstract class ApiError extends Error {
     public message: string,
   ) {
     super(message);
-
-    // Correção para 'instanceof' funcionar corretamente
-    Object.setPrototypeOf(this, new.target.prototype);
   }
 }

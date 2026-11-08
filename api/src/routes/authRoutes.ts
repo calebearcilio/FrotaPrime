@@ -5,10 +5,8 @@ import { loginSchema, signupSchema } from "../schemas/authSchema";
 
 const authRoutes: Router = Router();
 
-/// Login
 authRoutes.post("/auth/login", bodyValidate(loginSchema), authController.login);
 
-/// Signup
 authRoutes.post("/auth/signup", bodyValidate(signupSchema), authController.signup);
 
 export default authRoutes;

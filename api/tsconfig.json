@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es6", // Versão do JavaScript de saída
-    "module": "commonjs", // Sistema de módulos
-    "rootDir": "./src", // Onde nosso código .ts estará
-    "outDir": "./dist", // Onde o JavaScript compilado será salvo
+    "target": "es6",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "resolveJsonModule": true,
-    "esModuleInterop": true, // Permite compatibilidade entre módulos CommonJS e ES
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true, // Habilita todas as checagens de tipo estritas
+    "strict": true,
     "skipLibCheck": true
   },
   "include": ["src"]

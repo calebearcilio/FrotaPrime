@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import z, { ZodError } from "zod";
 
-/// Validação do body da requisição baseado em um schema do zod
 export const bodyValidate =
   (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -9,15 +8,15 @@ export const bodyValidate =
       req.body = parsed;
       next();
     } catch (error: any) {
-      if(error instanceof ZodError) {
-        if(error.issues)
-        return res.status(400).json({
-          message: "Invalid body data",
-          errors: error.issues.map((err) => ({
-            field: err.path[0],
-            description: err.message,
-          })),
-        })
+      if (error instanceof ZodError) {
+        if (error.issues)
+          return res.status(400).json({
+            message: "Invalid body data",
+            errors: error.issues.map((err) => ({
+              field: err.path[0],
+              description: err.message,
+            })),
+          });
       }
 
       next(error);

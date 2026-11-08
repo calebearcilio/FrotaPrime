@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { EmailAlreadyExistsError } from "../errors/auth/EmailAlreadyExistsError";
+import { InvalidCredentialsError } from "../errors/auth/InvalidCredentialsError";
 import { PasswordsNotMatchError } from "../errors/auth/PasswordsNotMatchError";
-import { UserNotFoundError } from "../errors/auth/UserNotFoundError";
 import { prisma } from "../repository/prisma";
 import { AuthLoginData, AuthSignupData } from "../schemas/authSchema";
+import { TokenPayload } from "../types/TokenPayload";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -20,7 +21,7 @@ type DataResponse = {
 
 class AuthService {
   private generateToken(id: number, email: string): string {
-    return jwt.sign({ id: id, email: email }, JWT_SECRET, {
+    return jwt.sign({ id, email } as TokenPayload, JWT_SECRET, {
       expiresIn: "1d",
     });
   }
@@ -33,7 +34,7 @@ class AuthService {
     });
 
     if (!userData) {
-      throw new UserNotFoundError();
+      throw new InvalidCredentialsError();
     }
 
     const passwordIsValid = await bcrypt.compare(
@@ -42,7 +43,7 @@ class AuthService {
     );
 
     if (!passwordIsValid) {
-      throw new PasswordsNotMatchError();
+      throw new InvalidCredentialsError();
     }
 
     const token = this.generateToken(userData.id, userData.email);
@@ -66,6 +67,10 @@ class AuthService {
       throw new EmailAlreadyExistsError();
     }
 
+    if (authData.password !== authData.confirmPassword) {
+      throw new PasswordsNotMatchError();
+    }
+
     const passwordHash = await bcrypt.hash(authData.password, 10);
 
     const userData = await prisma.user.create({
@@ -80,12 +85,12 @@ class AuthService {
 
     const { password, ...userWithoutPassword } = userData;
 
-    const user = {
+    const response = {
       data: userWithoutPassword,
       token: token,
     };
 
-    return user;
+    return response;
   }
 }
 
