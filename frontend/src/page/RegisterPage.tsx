@@ -1,11 +1,8 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { Link } from "react-router-dom";
 import api, { getApiErrorMessage } from "../api/api";
 import type { AuthResponse } from "../api/api";
-
-type RegisterPageProps = {
-    onLogin: () => void;
-};
 
 type RegisterForm = {
     name: string;
@@ -19,7 +16,7 @@ type FormNotice = {
     message: string;
 };
 
-const RegisterPage = ({ onLogin }: RegisterPageProps) => {
+const RegisterPage = () => {
     const [form, setForm] = useState<RegisterForm>({
         name: "",
         email: "",
@@ -35,7 +32,7 @@ const RegisterPage = ({ onLogin }: RegisterPageProps) => {
         setIsSubmitting(true);
 
         try {
-            const response = await api.post<AuthResponse>("/auth/signup", form);
+            const response = await api.post<AuthResponse>("/auth/cadastro", form);
             setNotice({
                 kind: "success",
                 message: `Cadastro realizado com sucesso para ${response.data.data.name}.`,
@@ -123,7 +120,7 @@ const RegisterPage = ({ onLogin }: RegisterPageProps) => {
 
             <p className="form-switch">
                 Já tem cadastro?{" "}
-                <button type="button" onClick={onLogin}>Entrar</button>
+                <Link to="/login">Entrar</Link>
             </p>
         </div>
     );

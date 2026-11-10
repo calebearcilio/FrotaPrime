@@ -1,25 +1,21 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 import api, { getApiErrorMessage } from "../api/api";
 import type { AuthResponse } from "../api/api";
-
-type LoginPageProps = {
-  onRegister: () => void;
-};
 
 type LoginForm = {
   email: string;
   password: string;
 };
 
-type FormNotice = {
-  kind: "success" | "error";
-  message: string;
-};
-
-const LoginPage = ({ onRegister }: LoginPageProps) => {
+const LoginPage = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
-  const [notice, setNotice] = useState<FormNotice | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -29,15 +25,11 @@ const LoginPage = ({ onRegister }: LoginPageProps) => {
 
     try {
       const response = await api.post<AuthResponse>("/auth/login", form);
-      setNotice({
-        kind: "success",
-        message: `Login realizado com sucesso. Olá, ${response.data.data.name}.`,
-      });
+      login(response.data);
+      const state = location.state as { from?: { pathname?: string } } | null;
+      navigate(state?.from?.pathname ?? "/veiculos", { replace: true });
     } catch (error) {
-      setNotice({
-        kind: "error",
-        message: getApiErrorMessage(error, "Não foi possível entrar. Tente novamente."),
-      });
+      setNotice(getApiErrorMessage(error, "Não foi possível entrar. Tente novamente."));
     } finally {
       setIsSubmitting(false);
     }
@@ -77,11 +69,7 @@ const LoginPage = ({ onRegister }: LoginPageProps) => {
           required
         />
 
-        {notice && (
-          <p className={`form-notice ${notice.kind}`} role={notice.kind === "error" ? "alert" : "status"}>
-            {notice.message}
-          </p>
-        )}
+        {notice && <p className="form-notice error" role="alert">{notice}</p>}
 
         <button className="submit-button" type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Entrando..." : "Entrar na conta"}
@@ -90,7 +78,7 @@ const LoginPage = ({ onRegister }: LoginPageProps) => {
 
       <p className="form-switch">
         Ainda não tem cadastro?{" "}
-        <button type="button" onClick={onRegister}>Criar conta</button>
+        <Link to="/cadastro">Criar conta</Link>
       </p>
     </div>
   );
