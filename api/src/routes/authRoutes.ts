@@ -9,4 +9,6 @@ authRoutes.post("/auth/login", bodyValidate(loginSchema), authController.login);
 
 authRoutes.post("/auth/signup", bodyValidate(signupSchema), authController.signup);
 
+authRoutes.post("/auth/cadastro", bodyValidate(signupSchema), authController.signup);
+
 export default authRoutes;

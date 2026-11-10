@@ -258,7 +258,8 @@ input:focus-visible {
   text-align: center;
 }
 
-.form-switch button {
+.form-switch button,
+.form-switch a {
   padding: 0;
   border: 0;
   background: transparent;
@@ -330,5 +331,148 @@ input:focus-visible {
 
   .form-heading h1 {
     font-size: 33px;
+  }
+}
+
+.workspace-shell {
+  min-height: 100vh;
+  background: #edf0eb;
+}
+
+.workspace-header {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  padding: 12px 5vw;
+  border-bottom: 1px solid #d5dcd5;
+  background: #f8f9f6;
+  gap: 42px;
+}
+
+.workspace-brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  color: #202722;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.workspace-brand .brand-symbol {
+  width: 34px;
+  height: 34px;
+}
+
+.workspace-nav {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 25px;
+}
+
+.workspace-nav a {
+  display: grid;
+  min-height: 100%;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  color: #68746d;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.workspace-nav a.active {
+  border-bottom-color: #425d49;
+  color: #263a2d;
+}
+
+.workspace-account {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 18px;
+}
+
+.account-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: right;
+}
+
+.account-identity strong {
+  color: #28342c;
+  font-size: 13px;
+}
+
+.account-identity span {
+  color: #748078;
+  font-size: 11px;
+}
+
+.logout-button {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid #cbd3cc;
+  border-radius: 3px;
+  background: transparent;
+  color: #36473b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.logout-button:hover {
+  border-color: #425d49;
+  background: #edf2eb;
+}
+
+.workspace-content {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.workspace-content h1 {
+  margin: 0;
+  color: #26332a;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+@media (max-width: 680px) {
+  .workspace-header {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 12px 18px 0;
+    gap: 0 14px;
+  }
+
+  .workspace-account {
+    min-height: 54px;
+    gap: 10px;
+  }
+
+  .account-identity span {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workspace-nav {
+    order: 1;
+    width: 100%;
+    min-height: 44px;
+    gap: 23px;
+  }
+
+  .workspace-content {
+    width: calc(100% - 36px);
+    padding: 32px 0;
   }
 }
