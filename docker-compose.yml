@@ -4,16 +4,15 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      USER: postgres
-      PASSWORD: frotaprime
-      DATABASE: frotaprime
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-frotaprime}
+      POSTGRES_DB: ${POSTGRES_DB:-frotaprime}
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      # Via TCP: durante a inicialização a imagem sobe um servidor temporário só com socket
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$PASSWORD --silent"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -22,8 +21,9 @@ services:
   api:
     build: ./api
     environment:
-      PORT: 3000
-      DATABASE_URL: postgresql://postgresql:frotaprime@db:5432/frotaprime?schema=public
+      API_PORT: 3000
+      JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-before-deploy}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-frotaprime}@db:5432/${POSTGRES_DB:-frotaprime}?schema=public
     ports:
       - "${API_PORT:-3000}:3000"
     volumes:
