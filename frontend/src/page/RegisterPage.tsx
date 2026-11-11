@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api, { getApiErrorMessage } from "../api/api";
 import type { AuthResponse } from "../api/api";
+import { useAuth } from "../auth/useAuth";
 
 type RegisterForm = {
     name: string;
@@ -12,11 +13,13 @@ type RegisterForm = {
 };
 
 type FormNotice = {
-    kind: "success" | "error";
+    kind: "error";
     message: string;
 };
 
 const RegisterPage = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const [form, setForm] = useState<RegisterForm>({
         name: "",
         email: "",
@@ -33,10 +36,8 @@ const RegisterPage = () => {
 
         try {
             const response = await api.post<AuthResponse>("/auth/cadastro", form);
-            setNotice({
-                kind: "success",
-                message: `Cadastro realizado com sucesso para ${response.data.data.name}.`,
-            });
+            login(response.data);
+            navigate("/veiculos", { replace: true });
         } catch (error) {
             setNotice({
                 kind: "error",
@@ -108,7 +109,7 @@ const RegisterPage = () => {
                 />
 
                 {notice && (
-                    <p className={`form-notice ${notice.kind}`} role={notice.kind === "error" ? "alert" : "status"}>
+                    <p className={`form-notice ${notice.kind}`} role="alert">
                         {notice.message}
                     </p>
                 )}
