@@ -26,18 +26,18 @@ export type Vehicle = {
   disponivel: boolean;
 };
 
-export type RentalStatus = "ACTIVE" | "COMPLETED";
+export type RentalStatus = "ACTIVE" | "FINALIZADA";
 
 export type Rental = {
   id: number;
-  userId: number;
-  vehicleId: number;
-  startDate: string;
-  expectedReturnDate: string;
-  returnDate: string | null;
-  totalAmount: number;
+  usuarioId: number;
+  veiculoId: number;
+  dataInicio: string;
+  dataPrevistaDevolucao: string;
+  dataDevolucao: string | null;
+  valorTotal: number;
   status: RentalStatus;
-  vehicle: Vehicle;
+  veiculo: Vehicle;
 };
 
 type ApiErrorResponse = {

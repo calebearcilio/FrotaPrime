@@ -69,7 +69,9 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
     setCreatedRental(null);
 
     if (form.dataPrevistaDevolucao <= form.dataInicio) {
-      setNotice("A data prevista de devolução deve ser posterior à data de início.");
+      setNotice(
+        "A data prevista de devolução deve ser posterior à data de início.",
+      );
       return;
     }
 
@@ -180,13 +182,13 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
           <div className="form-notice success rental-summary" role="status">
             <strong>Locação #{createdRental.id} registrada com sucesso!</strong>
             <span>
-              Veículo: {createdRental.vehicle.marca}{" "}
-              {createdRental.vehicle.modelo} ({createdRental.vehicle.placa})
+              Veículo: {createdRental.veiculo.marca}{" "}
+              {createdRental.veiculo.modelo} ({createdRental.veiculo.placa})
             </span>
             <span>
               Valor calculado pela API:{" "}
               <strong>
-                {currencyFormatter.format(createdRental.totalAmount)}
+                {currencyFormatter.format(createdRental.valorTotal)}
               </strong>
             </span>
           </div>
