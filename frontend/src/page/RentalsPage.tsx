@@ -4,7 +4,7 @@ import type { Rental } from "../api/api";
 import RentalForm from "../components/RentalForm";
 import RentalList from "../components/RentalList";
 
-const LocacoesPage = () => {
+const RentalsPage = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [reloadKey, setReloadKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +58,7 @@ const LocacoesPage = () => {
         current.map((item) => (item.id === rentalId ? response.data : item)),
       );
       setActionSuccess(
-        `Locação #${response.data.id} (${response.data.veiculo.placa}) finalizada com sucesso.`,
+        `Locação #${response.data.id} (${response.data.vehicle.licensePlate}) finalizada com sucesso.`,
       );
       setReloadKey((key) => key + 1);
     } catch (err: unknown) {
@@ -112,4 +112,4 @@ const LocacoesPage = () => {
   );
 };
 
-export default LocacoesPage;
+export default RentalsPage;

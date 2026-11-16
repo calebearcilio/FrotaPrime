@@ -40,14 +40,20 @@ const VehicleList = ({ vehicles, isLoading, error }: VehicleListProps) => {
         <tbody>
           {vehicles.map((vehicle) => (
             <tr key={vehicle.id}>
-              <td>{vehicle.marca}</td>
-              <td>{vehicle.modelo}</td>
-              <td className="plate">{vehicle.placa}</td>
-              <td>{vehicle.ano}</td>
-              <td className="numeric">{currencyFormatter.format(vehicle.valorDiaria)}</td>
+              <td>{vehicle.brand}</td>
+              <td>{vehicle.model}</td>
+              <td className="plate">{vehicle.licensePlate}</td>
+              <td>{vehicle.year}</td>
+              <td className="numeric">
+                {currencyFormatter.format(vehicle.dailyRate)}
+              </td>
               <td>
-                <span className={`status-badge ${vehicle.disponivel ? "available" : "unavailable"}`}>
-                  {vehicle.disponivel ? "Disponível" : "Indisponível"}
+                <span
+                  className={`status-badge ${
+                    vehicle.available ? "available" : "unavailable"
+                  }`}
+                >
+                  {vehicle.available ? "Disponível" : "Indisponível"}
                 </span>
               </td>
             </tr>

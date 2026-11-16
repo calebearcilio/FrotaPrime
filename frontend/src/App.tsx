@@ -5,7 +5,7 @@ import { useAuth } from "./auth/useAuth";
 import Layout from "./components/Layout";
 import { GuestOnlyRoute, ProtectedRoute } from "./components/ProtectedRoute";
 import AutomobilePage from "./page/AutomobilePage";
-import LocacoesPage from "./page/LocacoesPage";
+import RentalsPage from "./page/RentalsPage";
 import LoginPage from "./page/LoginPage";
 import RegisterPage from "./page/RegisterPage";
 
@@ -48,7 +48,7 @@ const App = () => (
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/veiculos" element={<AutomobilePage />} />
-            <Route path="/locacoes" element={<LocacoesPage />} />
+            <Route path="/locacoes" element={<RentalsPage />} />
           </Route>
         </Route>
         <Route path="/" element={<HomeRedirect />} />

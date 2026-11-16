@@ -4,9 +4,9 @@ import api, { getApiErrorMessage } from "../api/api";
 import type { Rental, Vehicle } from "../api/api";
 
 type RentalFormData = {
-  veiculoId: string;
-  dataInicio: string;
-  dataPrevistaDevolucao: string;
+  vehicleId: string;
+  startDate: string;
+  expectedReturnDate: string;
 };
 
 type RentalFormProps = {
@@ -15,9 +15,9 @@ type RentalFormProps = {
 };
 
 const emptyForm: RentalFormData = {
-  veiculoId: "",
-  dataInicio: "",
-  dataPrevistaDevolucao: "",
+  vehicleId: "",
+  startDate: "",
+  expectedReturnDate: "",
 };
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -68,7 +68,7 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
     setNotice(null);
     setCreatedRental(null);
 
-    if (form.dataPrevistaDevolucao <= form.dataInicio) {
+    if (form.expectedReturnDate <= form.startDate) {
       setNotice(
         "A data prevista de devolução deve ser posterior à data de início.",
       );
@@ -79,9 +79,9 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
 
     try {
       const response = await api.post<Rental>("/locacoes", {
-        veiculoId: Number(form.veiculoId),
-        dataInicio: form.dataInicio,
-        dataPrevistaDevolucao: form.dataPrevistaDevolucao,
+        vehicleId: Number(form.vehicleId),
+        startDate: form.startDate,
+        expectedReturnDate: form.expectedReturnDate,
       });
 
       setForm(emptyForm);
@@ -115,10 +115,10 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
           </label>
           <select
             id="rental-vehicle"
-            name="veiculoId"
-            value={form.veiculoId}
+            name="vehicleId"
+            value={form.vehicleId}
             onChange={(event) =>
-              setForm({ ...form, veiculoId: event.target.value })
+              setForm({ ...form, vehicleId: event.target.value })
             }
             disabled={isLoadingVehicles || availableVehicles.length === 0}
             required
@@ -132,8 +132,8 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
             </option>
             {availableVehicles.map((vehicle) => (
               <option key={vehicle.id} value={vehicle.id}>
-                {vehicle.marca} {vehicle.modelo} — {vehicle.placa} (
-                {currencyFormatter.format(vehicle.valorDiaria)}/dia)
+                {vehicle.brand} {vehicle.model} — {vehicle.licensePlate} (
+                {currencyFormatter.format(vehicle.dailyRate)}/dia)
               </option>
             ))}
           </select>
@@ -145,11 +145,11 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
           </label>
           <input
             id="rental-start-date"
-            name="dataInicio"
+            name="startDate"
             type="date"
-            value={form.dataInicio}
+            value={form.startDate}
             onChange={(event) =>
-              setForm({ ...form, dataInicio: event.target.value })
+              setForm({ ...form, startDate: event.target.value })
             }
             required
           />
@@ -161,12 +161,12 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
           </label>
           <input
             id="rental-return-date"
-            name="dataPrevistaDevolucao"
+            name="expectedReturnDate"
             type="date"
-            min={form.dataInicio || undefined}
-            value={form.dataPrevistaDevolucao}
+            min={form.startDate || undefined}
+            value={form.expectedReturnDate}
             onChange={(event) =>
-              setForm({ ...form, dataPrevistaDevolucao: event.target.value })
+              setForm({ ...form, expectedReturnDate: event.target.value })
             }
             required
           />
@@ -182,13 +182,13 @@ const RentalForm = ({ reloadTrigger = 0, onCreated }: RentalFormProps) => {
           <div className="form-notice success rental-summary" role="status">
             <strong>Locação #{createdRental.id} registrada com sucesso!</strong>
             <span>
-              Veículo: {createdRental.veiculo.marca}{" "}
-              {createdRental.veiculo.modelo} ({createdRental.veiculo.placa})
+              Veículo: {createdRental.vehicle.brand}{" "}
+              {createdRental.vehicle.model} ({createdRental.vehicle.licensePlate})
             </span>
             <span>
               Valor calculado pela API:{" "}
               <strong>
-                {currencyFormatter.format(createdRental.valorTotal)}
+                {currencyFormatter.format(createdRental.totalAmount)}
               </strong>
             </span>
           </div>

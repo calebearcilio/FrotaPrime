@@ -18,26 +18,26 @@ export type AuthResponse = {
 
 export type Vehicle = {
   id: number;
-  marca: string;
-  modelo: string;
-  placa: string;
-  ano: number;
-  valorDiaria: number;
-  disponivel: boolean;
+  brand: string;
+  model: string;
+  licensePlate: string;
+  year: number;
+  dailyRate: number;
+  available: boolean;
 };
 
-export type RentalStatus = "ACTIVE" | "FINALIZADA";
+export type RentalStatus = "ACTIVE" | "COMPLETED";
 
 export type Rental = {
   id: number;
-  usuarioId: number;
-  veiculoId: number;
-  dataInicio: string;
-  dataPrevistaDevolucao: string;
-  dataDevolucao: string | null;
-  valorTotal: number;
+  userId: number;
+  vehicleId: number;
+  startDate: string;
+  expectedReturnDate: string;
+  returnDate: string | null;
+  totalAmount: number;
   status: RentalStatus;
-  veiculo: Vehicle;
+  vehicle: Vehicle;
 };
 
 type ApiErrorResponse = {
@@ -92,7 +92,7 @@ api.interceptors.response.use(
 
 export const getApiErrorMessage = (error: unknown, fallback: string) => {
   if (axios.isAxiosError<ApiErrorResponse>(error)) {
-    const validationMessage = error.response?.data.errors?.[0]?.description;
+    const validationMessage = error.response?.data?.errors?.[0]?.description;
     return validationMessage ?? error.response?.data?.message ?? fallback;
   }
 

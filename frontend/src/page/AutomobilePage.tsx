@@ -4,11 +4,11 @@ import type { Vehicle } from "../api/api";
 import VehicleForm from "../components/VehicleForm";
 import VehicleList from "../components/VehicleList";
 
-type AvailabilityFilter = "todos" | "true" | "false";
+type AvailabilityFilter = "all" | "true" | "false";
 
 const AutomobilePage = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [filter, setFilter] = useState<AvailabilityFilter>("todos");
+  const [filter, setFilter] = useState<AvailabilityFilter>("all");
   const [reloadKey, setReloadKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ const AutomobilePage = () => {
 
     api
       .get<Vehicle[]>("/veiculos", {
-        params: filter === "todos" ? undefined : { disponivel: filter },
+        params: filter === "all" ? undefined : { disponivel: filter },
       })
       .then((response) => {
         if (!isActive) return;
@@ -27,7 +27,9 @@ const AutomobilePage = () => {
       })
       .catch((error: unknown) => {
         if (!isActive) return;
-        setError(getApiErrorMessage(error, "Não foi possível carregar os veículos."));
+        setError(
+          getApiErrorMessage(error, "Não foi possível carregar os veículos."),
+        );
       })
       .finally(() => {
         if (isActive) setIsLoading(false);
@@ -61,20 +63,28 @@ const AutomobilePage = () => {
               <h2>Veículos cadastrados</h2>
             </div>
             <div className="filter-field">
-              <label className="field-label" htmlFor="vehicle-filter">Disponibilidade</label>
+              <label className="field-label" htmlFor="vehicle-filter">
+                Disponibilidade
+              </label>
               <select
                 id="vehicle-filter"
                 value={filter}
-                onChange={(event) => handleFilterChange(event.target.value as AvailabilityFilter)}
+                onChange={(event) =>
+                  handleFilterChange(event.target.value as AvailabilityFilter)
+                }
               >
-                <option value="todos">Todos</option>
+                <option value="all">Todos</option>
                 <option value="true">Disponíveis</option>
                 <option value="false">Indisponíveis</option>
               </select>
             </div>
           </div>
 
-          <VehicleList vehicles={vehicles} isLoading={isLoading} error={error} />
+          <VehicleList
+            vehicles={vehicles}
+            isLoading={isLoading}
+            error={error}
+          />
         </section>
       </div>
     </div>

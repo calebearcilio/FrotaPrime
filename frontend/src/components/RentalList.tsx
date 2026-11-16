@@ -70,14 +70,14 @@ const RentalList = ({
             return (
               <tr key={rental.id}>
                 <td>
-                  {rental.veiculo.marca} {rental.veiculo.modelo}
+                  {rental.vehicle.brand} {rental.vehicle.model}
                 </td>
-                <td className="plate">{rental.veiculo.placa}</td>
-                <td>{formatDate(rental.dataInicio)}</td>
-                <td>{formatDate(rental.dataPrevistaDevolucao)}</td>
-                <td>{formatDate(rental.dataDevolucao)}</td>
+                <td className="plate">{rental.vehicle.licensePlate}</td>
+                <td>{formatDate(rental.startDate)}</td>
+                <td>{formatDate(rental.expectedReturnDate)}</td>
+                <td>{formatDate(rental.returnDate)}</td>
                 <td className="numeric">
-                  {currencyFormatter.format(rental.valorTotal)}
+                  {currencyFormatter.format(rental.totalAmount)}
                 </td>
                 <td>
                   <span

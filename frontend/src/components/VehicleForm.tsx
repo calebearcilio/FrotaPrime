@@ -5,11 +5,11 @@ import api, { getApiErrorMessage } from "../api/api";
 import type { Vehicle } from "../api/api";
 
 type VehicleFormData = {
-  marca: string;
-  modelo: string;
-  placa: string;
-  ano: string;
-  valorDiaria: string;
+  brand: string;
+  model: string;
+  licensePlate: string;
+  year: string;
+  dailyRate: string;
 };
 
 type VehicleFormProps = {
@@ -17,11 +17,11 @@ type VehicleFormProps = {
 };
 
 const emptyForm: VehicleFormData = {
-  marca: "",
-  modelo: "",
-  placa: "",
-  ano: "",
-  valorDiaria: "",
+  brand: "",
+  model: "",
+  licensePlate: "",
+  year: "",
+  dailyRate: "",
 };
 
 const DUPLICATE_PLATE_MESSAGE = "Já existe um veículo cadastrado com esta placa.";
@@ -42,21 +42,26 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
 
     try {
       const response = await api.post<Vehicle>("/veiculos", {
-        marca: form.marca,
-        modelo: form.modelo,
-        placa: form.placa.trim().toUpperCase(),
-        ano: Number(form.ano),
-        valorDiaria: Number(form.valorDiaria),
+        brand: form.brand,
+        model: form.model,
+        licensePlate: form.licensePlate.trim().toUpperCase(),
+        year: Number(form.year),
+        dailyRate: Number(form.dailyRate),
       });
       setForm(emptyForm);
-      setSuccess(`Veículo ${response.data.placa} cadastrado com sucesso.`);
+      setSuccess(`Veículo ${response.data.licensePlate} cadastrado com sucesso.`);
       onCreated(response.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         setPlateError(true);
         setNotice(DUPLICATE_PLATE_MESSAGE);
       } else {
-        setNotice(getApiErrorMessage(error, "Não foi possível cadastrar o veículo. Tente novamente."));
+        setNotice(
+          getApiErrorMessage(
+            error,
+            "Não foi possível cadastrar o veículo. Tente novamente.",
+          ),
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -75,11 +80,11 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
           <label className="field-label" htmlFor="vehicle-brand">Marca</label>
           <input
             id="vehicle-brand"
-            name="marca"
+            name="brand"
             type="text"
             placeholder="Fiat"
-            value={form.marca}
-            onChange={(event) => setForm({ ...form, marca: event.target.value })}
+            value={form.brand}
+            onChange={(event) => setForm({ ...form, brand: event.target.value })}
             required
           />
         </div>
@@ -88,11 +93,11 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
           <label className="field-label" htmlFor="vehicle-model">Modelo</label>
           <input
             id="vehicle-model"
-            name="modelo"
+            name="model"
             type="text"
             placeholder="Argo"
-            value={form.modelo}
-            onChange={(event) => setForm({ ...form, modelo: event.target.value })}
+            value={form.model}
+            onChange={(event) => setForm({ ...form, model: event.target.value })}
             required
           />
         </div>
@@ -101,12 +106,12 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
           <label className="field-label" htmlFor="vehicle-plate">Placa</label>
           <input
             id="vehicle-plate"
-            name="placa"
+            name="licensePlate"
             type="text"
             placeholder="ABC1D23"
-            value={form.placa}
+            value={form.licensePlate}
             onChange={(event) => {
-              setForm({ ...form, placa: event.target.value });
+              setForm({ ...form, licensePlate: event.target.value });
               if (plateError) {
                 setPlateError(false);
                 setNotice(null);
@@ -118,7 +123,9 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
             required
           />
           {plateError && (
-            <span id="vehicle-plate-error" className="field-error">{DUPLICATE_PLATE_MESSAGE}</span>
+            <span id="vehicle-plate-error" className="field-error">
+              {DUPLICATE_PLATE_MESSAGE}
+            </span>
           )}
         </div>
 
@@ -126,11 +133,11 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
           <label className="field-label" htmlFor="vehicle-year">Ano</label>
           <input
             id="vehicle-year"
-            name="ano"
+            name="year"
             type="number"
             placeholder="2024"
-            value={form.ano}
-            onChange={(event) => setForm({ ...form, ano: event.target.value })}
+            value={form.year}
+            onChange={(event) => setForm({ ...form, year: event.target.value })}
             min={1900}
             max={new Date().getFullYear() + 1}
             step={1}
@@ -139,14 +146,18 @@ const VehicleForm = ({ onCreated }: VehicleFormProps) => {
         </div>
 
         <div className="field">
-          <label className="field-label" htmlFor="vehicle-daily-rate">Valor da diária (R$)</label>
+          <label className="field-label" htmlFor="vehicle-daily-rate">
+            Valor da diária (R$)
+          </label>
           <input
             id="vehicle-daily-rate"
-            name="valorDiaria"
+            name="dailyRate"
             type="number"
             placeholder="150.00"
-            value={form.valorDiaria}
-            onChange={(event) => setForm({ ...form, valorDiaria: event.target.value })}
+            value={form.dailyRate}
+            onChange={(event) =>
+              setForm({ ...form, dailyRate: event.target.value })
+            }
             min={0.01}
             step={0.01}
             required
