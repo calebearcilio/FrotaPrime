@@ -1,5 +1,14 @@
+import RentalForm from "../components/RentalForm";
+
 const LocacoesPage = () => {
-  return <h1>Locações</h1>;
-}
+  return (
+    <div className="vehicle-page">
+      <h1>Locações</h1>
+      <div className="vehicle-grid">
+        <RentalForm onCreated={() => undefined} />
+      </div>
+    </div>
+  );
+};
 
 export default LocacoesPage;
