@@ -1,83 +1,102 @@
 import axios from "axios";
 import {
-    AUTH_SESSION_KEY,
-    AUTH_UNAUTHORIZED_EVENT,
-    clearStoredSession,
+  AUTH_SESSION_KEY,
+  AUTH_UNAUTHORIZED_EVENT,
+  clearStoredSession,
 } from "../auth/sessionStorage";
 
 export type AuthResponse = {
-    data: {
-        id: number;
-        name: string;
-        email: string;
-        createdAt: string;
-    };
-    token: string;
-    message: string;
+  data: {
+    id: number;
+    name: string;
+    email: string;
+    createdAt: string;
+  };
+  token: string;
+  message: string;
 };
 
 export type Vehicle = {
-    id: number;
-    marca: string;
-    modelo: string;
-    placa: string;
-    ano: number;
-    valorDiaria: number;
-    disponivel: boolean;
+  id: number;
+  brand: string;
+  model: string;
+  licensePlate: string;
+  year: number;
+  dailyRate: number;
+  available: boolean;
+};
+
+export type RentalStatus = "ACTIVE" | "COMPLETED";
+
+export type Rental = {
+  id: number;
+  userId: number;
+  vehicleId: number;
+  startDate: string;
+  expectedReturnDate: string;
+  returnDate: string | null;
+  totalAmount: number;
+  status: RentalStatus;
+  vehicle: Vehicle;
 };
 
 type ApiErrorResponse = {
-    message?: string;
+  message?: string;
+  errors?: {
+    field?: string;
+    description?: string;
+  }[];
 };
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
-    headers: {
-        "Content-Type": "application/json",
-    },
+  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 const isPublicAuthRequest = (url?: string) =>
-    /\/auth\/(login|signup|cadastro)(?:\?|$)/.test(url ?? "");
+  /\/auth\/(login|signup|cadastro)(?:\?|$)/.test(url ?? "");
 
 api.interceptors.request.use((config) => {
-    if (!isPublicAuthRequest(config.url)) {
-        const storedSession = window.localStorage.getItem(AUTH_SESSION_KEY);
-        if (storedSession) {
-            try {
-                const { token } = JSON.parse(storedSession) as { token?: string };
-                if (token) config.headers.Authorization = `Bearer ${token}`;
-            } catch {
-                clearStoredSession();
-            }
-        }
+  if (!isPublicAuthRequest(config.url)) {
+    const storedSession = window.localStorage.getItem(AUTH_SESSION_KEY);
+    if (storedSession) {
+      try {
+        const { token } = JSON.parse(storedSession) as { token?: string };
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+      } catch {
+        clearStoredSession();
+      }
     }
+  }
 
-    return config;
+  return config;
 });
 
 api.interceptors.response.use(
-    (response) => response,
-    (error: unknown) => {
-        if (
-            axios.isAxiosError(error) &&
-            error.response?.status === 401 &&
-            !isPublicAuthRequest(error.config?.url)
-        ) {
-            clearStoredSession();
-            window.dispatchEvent(new Event(AUTH_UNAUTHORIZED_EVENT));
-        }
+  (response) => response,
+  (error: unknown) => {
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401 &&
+      !isPublicAuthRequest(error.config?.url)
+    ) {
+      clearStoredSession();
+      window.dispatchEvent(new Event(AUTH_UNAUTHORIZED_EVENT));
+    }
 
-        return Promise.reject(error);
-    },
+    return Promise.reject(error);
+  },
 );
 
 export const getApiErrorMessage = (error: unknown, fallback: string) => {
-    if (axios.isAxiosError<ApiErrorResponse>(error)) {
-        return error.response?.data?.message ?? fallback;
-    }
+  if (axios.isAxiosError<ApiErrorResponse>(error)) {
+    const validationMessage = error.response?.data?.errors?.[0]?.description;
+    return validationMessage ?? error.response?.data?.message ?? fallback;
+  }
 
-    return fallback;
+  return fallback;
 };
 
 export default api;

@@ -1,11 +1,18 @@
 import z from "zod";
 
 export const createVehicleSchema = z.object({
-  marca: z.string().trim().min(1, "Marca é obrigatória"),
-  modelo: z.string().trim().min(1, "Modelo é obrigatório"),
-  placa: z.string().trim().min(1, "Placa é obrigatória"),
-  ano: z.number().int("Ano deve ser um número inteiro"),
-  valorDiaria: z.number().positive("Valor da diária deve ser positivo"),
+  brand: z.string("Marca inválida").trim().min(1, "Marca é obrigatória"),
+  model: z.string("Modelo inválido").trim().min(1, "Modelo é obrigatório"),
+  licensePlate: z
+    .string("Placa inválida")
+    .trim()
+    .min(1, "Placa é obrigatória"),
+  year: z
+    .number("Ano deve ser um número")
+    .int("Ano deve ser um número inteiro"),
+  dailyRate: z
+    .number("Valor da diária deve ser um número")
+    .positive("Valor da diária deve ser positivo"),
 });
 
 export const listVehiclesQuerySchema = z.object({

@@ -26,21 +26,21 @@ const toRentalResponse = (rental: {
   };
 }) => ({
   id: rental.id,
-  usuarioId: rental.userId,
-  veiculoId: rental.vehicleId,
-  dataInicio: rental.startDate,
-  dataPrevistaDevolucao: rental.expectedReturnDate,
-  dataDevolucao: rental.returnDate,
-  valorTotal: rental.totalAmount.toNumber(),
+  userId: rental.userId,
+  vehicleId: rental.vehicleId,
+  startDate: rental.startDate,
+  expectedReturnDate: rental.expectedReturnDate,
+  returnDate: rental.returnDate,
+  totalAmount: rental.totalAmount.toNumber(),
   status: rental.status,
-  veiculo: {
+  vehicle: {
     id: rental.vehicle.id,
-    marca: rental.vehicle.brand,
-    modelo: rental.vehicle.model,
-    placa: rental.vehicle.licensePlate,
-    ano: rental.vehicle.year,
-    valorDiaria: rental.vehicle.dailyRate.toNumber(),
-    disponivel: rental.vehicle.available,
+    brand: rental.vehicle.brand,
+    model: rental.vehicle.model,
+    licensePlate: rental.vehicle.licensePlate,
+    year: rental.vehicle.year,
+    dailyRate: rental.vehicle.dailyRate.toNumber(),
+    available: rental.vehicle.available,
   },
 });
 
@@ -55,7 +55,7 @@ class RentalService {
   async create(userId: number, rentalData: CreateRentalData) {
     const rental = await prisma.$transaction(async (tx) => {
       const vehicle = await tx.vehicle.findUnique({
-        where: { id: rentalData.veiculoId },
+        where: { id: rentalData.vehicleId },
       });
 
       if (!vehicle) {
@@ -63,8 +63,8 @@ class RentalService {
       }
 
       const days = this.calculateDays(
-        rentalData.dataInicio,
-        rentalData.dataPrevistaDevolucao,
+        rentalData.startDate,
+        rentalData.expectedReturnDate,
       );
       const totalAmount = vehicle.dailyRate.mul(days);
 
@@ -81,8 +81,8 @@ class RentalService {
         data: {
           userId,
           vehicleId: vehicle.id,
-          startDate: rentalData.dataInicio,
-          expectedReturnDate: rentalData.dataPrevistaDevolucao,
+          startDate: rentalData.startDate,
+          expectedReturnDate: rentalData.expectedReturnDate,
           totalAmount,
         },
         include: { vehicle: true },
@@ -106,13 +106,13 @@ class RentalService {
         throw new RentalForbiddenError();
       }
 
-      if (existingRental.status === "FINALIZADA") {
+      if (existingRental.status === "COMPLETED") {
         throw new RentalAlreadyFinalizedError();
       }
 
       const updatedRental = await tx.rental.updateMany({
         where: { id: rentalId, userId, status: "ACTIVE" },
-        data: { returnDate: new Date(), status: "FINALIZADA" },
+        data: { returnDate: new Date(), status: "COMPLETED" },
       });
 
       if (updatedRental.count === 0) {
