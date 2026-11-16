@@ -567,3 +567,101 @@ input:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+.list-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.filter-field {
+  display: grid;
+  gap: 6px;
+}
+
+.filter-field select {
+  min-width: 170px;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid #cbd3cc;
+  border-radius: 3px;
+  background: #fff;
+  color: #202722;
+  font: inherit;
+  font-size: 13px;
+}
+
+.filter-field select:focus-visible {
+  outline: 3px solid #d5ef66;
+  outline-offset: 3px;
+}
+
+.list-state {
+  margin: 0;
+  padding: 18px 0;
+  color: #68746d;
+  font-size: 14px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.vehicle-table th {
+  padding: 0 12px 10px;
+  border-bottom: 1px solid #d5dcd5;
+  color: #68746d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.vehicle-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e3e7e2;
+  color: #26332a;
+  white-space: nowrap;
+}
+
+.vehicle-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.vehicle-table .numeric {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.vehicle-table .plate {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-badge.available {
+  background: #e4f0d8;
+  color: #304b29;
+}
+
+.status-badge.unavailable {
+  background: #f6e3dd;
+  color: #8c3829;
+}
