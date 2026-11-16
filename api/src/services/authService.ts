@@ -17,6 +17,7 @@ type DataResponse = {
     createdAt: Date;
   };
   token: string;
+  message: string;
 };
 
 class AuthService {
@@ -53,6 +54,7 @@ class AuthService {
     const user = {
       data: userWithoutPassword,
       token: token,
+      message: "Login realizado com sucesso",
     };
 
     return user;
@@ -88,6 +90,7 @@ class AuthService {
     const response = {
       data: userWithoutPassword,
       token: token,
+      message: "Cadastro realizado com sucesso",
     };
 
     return response;

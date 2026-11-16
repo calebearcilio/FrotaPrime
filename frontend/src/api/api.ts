@@ -13,6 +13,7 @@ export type AuthResponse = {
         createdAt: string;
     };
     token: string;
+    message: string;
 };
 
 export type Vehicle = {

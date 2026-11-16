@@ -1,9 +1,12 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
 const Layout = () => {
     const { user, logout } = useAuth();
+    const location = useLocation();
     const navigate = useNavigate();
+    const successMessage = (location.state as { successMessage?: string } | null)
+        ?.successMessage;
 
     const handleLogout = () => {
         logout();
@@ -32,6 +35,11 @@ const Layout = () => {
                 </div>
             </header>
             <section className="workspace-content">
+                {successMessage && (
+                    <p className="form-notice success" role="status">
+                        {successMessage}
+                    </p>
+                )}
                 <Outlet />
             </section>
         </main>

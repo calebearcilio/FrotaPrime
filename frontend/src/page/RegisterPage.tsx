@@ -37,7 +37,10 @@ const RegisterPage = () => {
         try {
             const response = await api.post<AuthResponse>("/auth/cadastro", form);
             login(response.data);
-            navigate("/veiculos", { replace: true });
+            navigate("/veiculos", {
+                replace: true,
+                state: { successMessage: response.data.message },
+            });
         } catch (error) {
             setNotice({
                 kind: "error",

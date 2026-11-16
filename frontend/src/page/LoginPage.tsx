@@ -27,7 +27,10 @@ const LoginPage = () => {
       const response = await api.post<AuthResponse>("/auth/login", form);
       login(response.data);
       const state = location.state as { from?: { pathname?: string } } | null;
-      navigate(state?.from?.pathname ?? "/veiculos", { replace: true });
+      navigate(state?.from?.pathname ?? "/veiculos", {
+        replace: true,
+        state: { successMessage: response.data.message },
+      });
     } catch (error) {
       setNotice(getApiErrorMessage(error, "Não foi possível entrar. Tente novamente."));
     } finally {
