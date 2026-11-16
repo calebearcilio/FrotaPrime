@@ -1,5 +1,14 @@
-const AutomobilePage = () => {
-  return <h1>Veículos</h1>;
-}
+import VehicleForm from "../components/VehicleForm";
 
-export default AutomobilePage; 
+const AutomobilePage = () => {
+  return (
+    <div className="vehicles-page">
+      <h1>Veículos</h1>
+      <div className="vehicles-grid">
+        <VehicleForm onCreated={() => undefined} />
+      </div>
+    </div>
+  );
+};
+
+export default AutomobilePage;
