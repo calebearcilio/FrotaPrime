@@ -15,6 +15,16 @@ export type AuthResponse = {
     token: string;
 };
 
+export type Vehicle = {
+    id: number;
+    marca: string;
+    modelo: string;
+    placa: string;
+    ano: number;
+    valorDiaria: number;
+    disponivel: boolean;
+};
+
 type ApiErrorResponse = {
     message?: string;
 };
