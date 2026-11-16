@@ -6,6 +6,7 @@ import { createRentalSchema } from "../schemas/rentalSchema";
 
 const rentalRoutes: Router = Router();
 
+rentalRoutes.get("/locacoes", authValidate, rentalController.list);
 rentalRoutes.post(
   "/locacoes",
   authValidate,

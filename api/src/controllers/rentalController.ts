@@ -14,6 +14,11 @@ class RentalController {
     );
     res.json(rental);
   }
+
+  async list(req: Request, res: Response) {
+    const rentals = await rentalService.list(req.user.id);
+    res.json(rentals);
+  }
 }
 
 export default new RentalController();

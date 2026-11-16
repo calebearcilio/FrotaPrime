@@ -15,6 +15,15 @@ const toRentalResponse = (rental: {
   returnDate: Date | null;
   totalAmount: { toNumber(): number };
   status: string;
+  vehicle: {
+    id: number;
+    brand: string;
+    model: string;
+    licensePlate: string;
+    year: number;
+    dailyRate: { toNumber(): number };
+    available: boolean;
+  };
 }) => ({
   id: rental.id,
   usuarioId: rental.userId,
@@ -24,6 +33,15 @@ const toRentalResponse = (rental: {
   dataDevolucao: rental.returnDate,
   valorTotal: rental.totalAmount.toNumber(),
   status: rental.status,
+  veiculo: {
+    id: rental.vehicle.id,
+    marca: rental.vehicle.brand,
+    modelo: rental.vehicle.model,
+    placa: rental.vehicle.licensePlate,
+    ano: rental.vehicle.year,
+    valorDiaria: rental.vehicle.dailyRate.toNumber(),
+    disponivel: rental.vehicle.available,
+  },
 });
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -67,6 +85,7 @@ class RentalService {
           expectedReturnDate: rentalData.dataPrevistaDevolucao,
           totalAmount,
         },
+        include: { vehicle: true },
       });
     });
 
@@ -105,10 +124,23 @@ class RentalService {
         data: { available: true },
       });
 
-      return tx.rental.findUniqueOrThrow({ where: { id: rentalId } });
+      return tx.rental.findUniqueOrThrow({
+        where: { id: rentalId },
+        include: { vehicle: true },
+      });
     });
 
     return toRentalResponse(rental);
+  }
+
+  async list(userId: number) {
+    const rentals = await prisma.rental.findMany({
+      where: { userId },
+      include: { vehicle: true },
+      orderBy: { id: "asc" },
+    });
+
+    return rentals.map(toRentalResponse);
   }
 }
 
