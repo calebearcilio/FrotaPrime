@@ -12,5 +12,10 @@ rentalRoutes.post(
   bodyValidate(createRentalSchema),
   rentalController.create,
 );
+rentalRoutes.patch(
+  "/locacoes/:id/finalizar",
+  authValidate,
+  rentalController.finalize,
+);
 
 export default rentalRoutes;

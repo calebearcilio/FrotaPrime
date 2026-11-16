@@ -9,7 +9,7 @@ datasource db {
 
 enum RentalStatus {
   ACTIVE
-  COMPLETED
+  FINALIZADA
 }
 
 model User {
