@@ -1,21 +1,21 @@
 import z from "zod";
 
 export const loginSchema = z.object({
-  email: z.email("Must be a valid email").min(1, "Email is required"),
+  email: z.email("E-mail inválido").min(1, "E-mail é obrigatório"),
   password: z
-    .string("Must be a valid password")
-    .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters long"),
+    .string("Senha inválida")
+    .min(1, "Senha é obrigatória")
+    .min(6, "Senha deve ter pelo menos 6 caracteres"),
 });
 
 export const signupSchema = loginSchema.extend({
   name: z
-    .string("Must be a valid name")
-    .min(2, "Name must be at least 2 characters long"),
+    .string("Nome inválido")
+    .min(2, "Nome deve ter pelo menos 2 caracteres"),
   confirmPassword: z
-    .string("Must be a valid password")
-    .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters long"),
+    .string("Confirmação de senha inválida")
+    .min(1, "Confirmação de senha é obrigatória")
+    .min(6, "Confirmação de senha deve ter pelo menos 6 caracteres"),
 });
 
 export type AuthLoginData = z.infer<typeof loginSchema>;

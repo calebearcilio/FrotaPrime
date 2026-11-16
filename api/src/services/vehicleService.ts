@@ -12,12 +12,12 @@ const toVehicleResponse = (vehicle: {
   available: boolean;
 }) => ({
   id: vehicle.id,
-  marca: vehicle.brand,
-  modelo: vehicle.model,
-  placa: vehicle.licensePlate,
-  ano: vehicle.year,
-  valorDiaria: vehicle.dailyRate.toNumber(),
-  disponivel: vehicle.available,
+  brand: vehicle.brand,
+  model: vehicle.model,
+  licensePlate: vehicle.licensePlate,
+  year: vehicle.year,
+  dailyRate: vehicle.dailyRate.toNumber(),
+  available: vehicle.available,
 });
 
 class VehicleService {
@@ -25,11 +25,11 @@ class VehicleService {
     try {
       const vehicle = await prisma.vehicle.create({
         data: {
-          brand: vehicleData.marca,
-          model: vehicleData.modelo,
-          licensePlate: vehicleData.placa,
-          year: vehicleData.ano,
-          dailyRate: vehicleData.valorDiaria,
+          brand: vehicleData.brand,
+          model: vehicleData.model,
+          licensePlate: vehicleData.licensePlate,
+          year: vehicleData.year,
+          dailyRate: vehicleData.dailyRate,
         },
       });
 
