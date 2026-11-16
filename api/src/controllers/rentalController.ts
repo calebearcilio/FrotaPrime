@@ -7,6 +7,14 @@ class RentalController {
     res.status(201).json(rental);
   }
 
+  async finalize(req: Request, res: Response) {
+    const rental = await rentalService.finalize(
+      req.user.id,
+      Number(req.params.id),
+    );
+    res.json(rental);
+  }
+
   async list(req: Request, res: Response) {
     const rentals = await rentalService.list(req.user.id);
     res.json(rentals);

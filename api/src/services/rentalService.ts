@@ -1,5 +1,8 @@
 import { VehicleNotFoundError } from "../errors/vehicles/VehicleNotFoundError";
 import { VehicleUnavailableError } from "../errors/vehicles/VehicleUnavailableError";
+import { RentalAlreadyFinalizedError } from "../errors/rentals/RentalAlreadyFinalizedError";
+import { RentalForbiddenError } from "../errors/rentals/RentalForbiddenError";
+import { RentalNotFoundError } from "../errors/rentals/RentalNotFoundError";
 import { prisma } from "../repository/prisma";
 import { CreateRentalData } from "../schemas/rentalSchema";
 
@@ -82,6 +85,47 @@ class RentalService {
           expectedReturnDate: rentalData.dataPrevistaDevolucao,
           totalAmount,
         },
+        include: { vehicle: true },
+      });
+    });
+
+    return toRentalResponse(rental);
+  }
+
+  async finalize(userId: number, rentalId: number) {
+    const rental = await prisma.$transaction(async (tx) => {
+      const existingRental = await tx.rental.findUnique({
+        where: { id: rentalId },
+      });
+
+      if (!existingRental) {
+        throw new RentalNotFoundError();
+      }
+
+      if (existingRental.userId !== userId) {
+        throw new RentalForbiddenError();
+      }
+
+      if (existingRental.status === "FINALIZADA") {
+        throw new RentalAlreadyFinalizedError();
+      }
+
+      const updatedRental = await tx.rental.updateMany({
+        where: { id: rentalId, userId, status: "ACTIVE" },
+        data: { returnDate: new Date(), status: "FINALIZADA" },
+      });
+
+      if (updatedRental.count === 0) {
+        throw new RentalAlreadyFinalizedError();
+      }
+
+      await tx.vehicle.update({
+        where: { id: existingRental.vehicleId },
+        data: { available: true },
+      });
+
+      return tx.rental.findUniqueOrThrow({
+        where: { id: rentalId },
         include: { vehicle: true },
       });
     });
