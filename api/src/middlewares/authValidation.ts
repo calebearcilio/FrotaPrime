@@ -23,6 +23,6 @@ export const authValidate = (
     req.user = decoded;
     next();
   } catch {
-    throw new UnauthorizedError("Invalid or expired token");
+    throw new UnauthorizedError("Token inválido ou expirado");
   }
 };

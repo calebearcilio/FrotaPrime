@@ -11,7 +11,7 @@ export const bodyValidate =
       if (error instanceof ZodError) {
         if (error.issues)
           return res.status(400).json({
-            message: "Invalid body data",
+            message: "Dados do body inválidos",
             errors: error.issues.map((err) => ({
               field: err.path[0],
               description: err.message,
@@ -31,7 +31,7 @@ export const queryValidate =
     } catch (error: any) {
       if (error instanceof ZodError) {
         return res.status(400).json({
-          message: "Invalid query data",
+          message: "Parâmetros de consulta inválidos",
           errors: error.issues.map((err) => ({
             field: err.path[0],
             description: err.message,
