@@ -29,7 +29,7 @@ O **FrotaPrime** é uma aplicação full stack para gestão de locação de veí
 ┌──────────────┐   HTTP/JSON + JWT   ┌──────────────┐   Prisma   ┌──────────────┐
 │   Frontend   │ ──────────────────► │     API      │ ─────────► │  PostgreSQL  │
 │ React + Vite │ ◄────────────────── │   Express    │ ◄───────── │      16      │
-│    :5173     │                     │    :3000     │            │    :5432     │
+│    :5173     │                     │    :3000     │            │    :5434     │
 └──────────────┘                     └──────────────┘            └──────────────┘
 ```
 
@@ -49,7 +49,7 @@ docker compose up --build --watch
 | --- | --- |
 | Frontend | http://localhost:5173 |
 | API | http://localhost:3000 |
-| PostgreSQL | `localhost:5432` (usuário `postgres`, senha `frotaprime`, banco `frotaprime`) |
+| PostgreSQL | `localhost:5434` (usuário `postgres`, senha `frotaprime`, banco `frotaprime`) |
 
 As migrations são aplicadas ao subir a API. Alterações em `api/src` e `frontend/src` recarregam sozinhas enquanto o `--watch` estiver ativo, e mudanças em `package.json` ou `package-lock.json` reconstroem a imagem.
 

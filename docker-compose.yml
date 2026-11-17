@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-frotaprime}
       POSTGRES_DB: ${POSTGRES_DB:-frotaprime}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_PORT:-5434}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:

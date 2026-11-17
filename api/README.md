@@ -566,12 +566,12 @@ As variáveis ficam no arquivo `.env` na **raiz do repositório** (use o [`.env.
 | `POSTGRES_USER` | ❌ | `postgres` | Usuário do banco (Docker Compose) |
 | `POSTGRES_PASSWORD` | ❌ | `frotaprime` | Senha do banco (Docker Compose) |
 | `POSTGRES_DB` | ❌ | `frotaprime` | Nome do banco (Docker Compose) |
-| `DB_PORT` | ❌ | `5432` | Porta exposta do PostgreSQL (Docker Compose) |
+| `DB_PORT` | ❌ | `5434` | Porta exposta do PostgreSQL (Docker Compose) |
 
 Exemplo:
 
 ```env
-DATABASE_URL="postgresql://postgres:frotaprime@localhost:5432/frotaprime?schema=public"
+DATABASE_URL="postgresql://postgres:frotaprime@localhost:5434/frotaprime?schema=public"
 JWT_SECRET=troque-este-valor
 API_PORT=3000
 ```
